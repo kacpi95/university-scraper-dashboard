@@ -17,5 +17,18 @@ export default function Dashboard() {
 		setValueResult(data);
 	};
 
-	return;
+	return (
+		<div>
+			<h1>University Scraper</h1>
+			<input
+				value={url}
+				onChange={(e) => setUrl(e.target.value)}
+				placeholder='Click university URL'
+			/>
+
+			<button onClick={scrape}>Scraper</button>
+
+			{valueResult && <pre>{JSON.stringify(valueResult, null, 2)}</pre>}
+		</div>
+	);
 }
