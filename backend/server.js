@@ -1,28 +1,35 @@
 const express = require("express");
 const cors = require("cors");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const dataMock = {
-	university: "AGH",
-	programs: [
-		{
-			name: "Informatyka",
-			degreeType: "I_stopnia",
-			mode: "Stacjonarnie",
-		},
-	],
-};
-
-app.post("/scrape", (req, res) => {
+app.post("/scrape", async (req, res) => {
 	const { url } = req.body;
 
-	console.log("Scrap", url);
+	try {
+		const response = await axios.get(url);
 
-	res.json(dataMock);
+		const $ = cheerio.load(response.data);
+
+		const title = $("title").text();
+
+		res.json({
+			success: true,
+			title,
+		});
+	} catch (error) {
+		console.error(error);
+
+		res.status(500).json({
+			success: false,
+			error: "Failed",
+		});
+	}
 });
 
 app.listen(3000, () => {
