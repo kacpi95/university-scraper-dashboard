@@ -1,10 +1,9 @@
 import { useState } from "react";
-
-type ScrapeResult = unknown;
+import type { ScrapeResult } from "../../types/types";
 
 export default function Dashboard() {
 	const [url, setUrl] = useState<string>("");
-	const [valueResult, setValueResult] = useState<any>(null);
+	const [valueResult, setValueResult] = useState<ScrapeResult | null>(null);
 
 	const scrape = async () => {
 		const response = await fetch("http://localhost:3000/scrape", {
