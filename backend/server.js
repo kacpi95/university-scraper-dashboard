@@ -16,11 +16,19 @@ app.post("/scrape", async (req, res) => {
 
 		const $ = cheerio.load(response.data);
 
-		const title = $("title").text();
+		const programs = [];
+
+		$('section[class^="kierunki-studiow-item--"]').each((i, el) => {
+			const name = $(el).find("h3").text().trim();
+
+			programs.push({
+				name,
+			});
+		});
 
 		res.json({
 			success: true,
-			title,
+			programs,
 		});
 	} catch (error) {
 		console.error(error);
