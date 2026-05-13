@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ScrapeResult } from "../../types/types";
+import "./Dashboard.css";
 
 export default function Dashboard() {
 	const [url, setUrl] = useState<string>("");
@@ -32,34 +33,36 @@ export default function Dashboard() {
 	};
 
 	return (
-		<div>
+		<div className='container'>
 			<h1>University Scraper</h1>
-			<input
-				value={url}
-				onChange={(e) => setUrl(e.target.value)}
-				placeholder='Click university URL'
-			/>
 
-			<button onClick={scrape}>Scraper</button>
+			<div className='inputRow'>
+				<input
+					value={url}
+					onChange={(e) => setUrl(e.target.value)}
+					placeholder='Enter university URL'
+				/>
 
-			{loading && <p>Loading...</p>}
-			{error && <p>{error}</p>}
+				<button onClick={scrape} disabled={loading}>
+					{loading ? "Scraping..." : "Scrape"}
+				</button>
+			</div>
+
+			{error && <p style={{ color: "red" }}>{error}</p>}
 
 			{valueResult?.programs?.map((program) => (
-				<div key={program.name} style={{ marginBottom: 20 }}>
+				<div className='card' key={program.name}>
 					<h3>{program.name}</h3>
 
-					<p>
+					<p className='meta'>
 						<strong>Stopień:</strong> {program.degreeType}
 					</p>
 
-					<p>
+					<p className='meta'>
 						<strong>Tryb:</strong> {program.studyMode}
 					</p>
 
-					<p>
-						<strong>Opis:</strong> {program.description}
-					</p>
+					<p className='meta'>{program.description}</p>
 				</div>
 			))}
 		</div>
