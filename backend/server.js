@@ -13,7 +13,6 @@ app.post("/scrape", async (req, res) => {
 
 	try {
 		const response = await axios.get(url);
-
 		const $ = cheerio.load(response.data);
 
 		const programs = [];
@@ -21,8 +20,41 @@ app.post("/scrape", async (req, res) => {
 		$('section[class^="kierunki-studiow-item--"]').each((i, el) => {
 			const name = $(el).find("h3").text().trim();
 
+			const degreeRaw = $(el).find(".poziom-ksztalcenia").text().trim();
+
+			let degreeType = "UNKNOWN";
+
+			if (degreeRaw.includes("I stopień")) {
+				degreeType = "I_STOPNIA";
+			} else if (degreeRaw.includes("II stopień")) {
+				degreeType = "II_STOPNIA";
+			} else if (degreeRaw.includes("jednolite")) {
+				degreeType = "JEDNOLITE";
+			}
+
+			let studyMode = "UNKNOWN";
+
+			$(el)
+				.find(".ks-icon")
+				.each((_, icon) => {
+					const title = $(icon).attr("title");
+
+					if (title?.includes("stacjonarny")) {
+						studyMode = "STACJONARNE";
+					}
+
+					if (title?.includes("niestacjonarny")) {
+						studyMode = "NIESTACJONARNE";
+					}
+				});
+
+			const description = $(el).find(".field-content").first().text().trim();
+
 			programs.push({
 				name,
+				degreeType,
+				studyMode,
+				description,
 			});
 		});
 
@@ -31,8 +63,6 @@ app.post("/scrape", async (req, res) => {
 			programs,
 		});
 	} catch (error) {
-		console.error(error);
-
 		res.status(500).json({
 			success: false,
 			error: "Failed",
