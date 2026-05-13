@@ -27,7 +27,11 @@ export default function Dashboard() {
 
 			<button onClick={scrape}>Scraper</button>
 
-			{valueResult && <pre>{JSON.stringify(valueResult, null, 2)}</pre>}
+			{valueResult?.programs?.map((program) => (
+				<div key={program.name}>
+					<h3>{program.name}</h3>
+				</div>
+			))}
 		</div>
 	);
 }
