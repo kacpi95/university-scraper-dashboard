@@ -46,8 +46,20 @@ export default function Dashboard() {
 			{error && <p>{error}</p>}
 
 			{valueResult?.programs?.map((program) => (
-				<div key={program.name}>
+				<div key={program.name} style={{ marginBottom: 20 }}>
 					<h3>{program.name}</h3>
+
+					<p>
+						<strong>Stopień:</strong> {program.degreeType}
+					</p>
+
+					<p>
+						<strong>Tryb:</strong> {program.studyMode}
+					</p>
+
+					<p>
+						<strong>Opis:</strong> {program.description}
+					</p>
 				</div>
 			))}
 		</div>
