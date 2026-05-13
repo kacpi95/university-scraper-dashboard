@@ -4,16 +4,31 @@ import type { ScrapeResult } from "../../types/types";
 export default function Dashboard() {
 	const [url, setUrl] = useState<string>("");
 	const [valueResult, setValueResult] = useState<ScrapeResult | null>(null);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState("");
 
 	const scrape = async () => {
-		const response = await fetch("http://localhost:3000/scrape", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ url }),
-		});
+		try {
+			setLoading(true);
+			setError("");
 
-		const data: ScrapeResult = await response.json();
-		setValueResult(data);
+			const response = await fetch("http://localhost:3000/scrape", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ url }),
+			});
+
+			if (!response.ok) {
+				throw new Error("Request failed");
+			}
+
+			const data: ScrapeResult = await response.json();
+			setValueResult(data);
+		} catch (error) {
+			setError("Failed to scrape university page");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -26,6 +41,9 @@ export default function Dashboard() {
 			/>
 
 			<button onClick={scrape}>Scraper</button>
+
+			{loading && <p>Loading...</p>}
+			{error && <p>{error}</p>}
 
 			{valueResult?.programs?.map((program) => (
 				<div key={program.name}>
