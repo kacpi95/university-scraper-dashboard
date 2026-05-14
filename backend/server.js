@@ -19,7 +19,13 @@ app.post("/scrape", async (req, res) => {
 	}
 
 	try {
-		const response = await axios.get(url);
+		const response = await axios.get(url, {
+			timeout: 15000,
+			headers: {
+				"User-Agent": "Mozilla/5.0 UniversityScraper/1.0",
+			},
+		});
+
 		const $ = cheerio.load(response.data);
 
 		const programs = [];
@@ -67,6 +73,9 @@ app.post("/scrape", async (req, res) => {
 
 		res.json({
 			success: true,
+			sourceUrl: url,
+			parserUsed: "cheerio_fallback",
+			warnings: [],
 			programs,
 		});
 	} catch (error) {
