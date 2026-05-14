@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { ScrapeResult } from "../../types/types";
 import "./Dashboard.css";
-import ResultSummary from "../../ResultSummary/ResultSummary";
+import ResultSummary from "../../components/ResultSummary/ResultSummary";
+import ProgramCard from "../../components/ProgramCard/ProgramCard";
 
 export default function Dashboard() {
 	const [url, setUrl] = useState<string>("");
@@ -67,19 +68,7 @@ export default function Dashboard() {
 			{valueResult && <ResultSummary result={valueResult} />}
 
 			{valueResult?.programs?.map((program) => (
-				<div className='card' key={program.name}>
-					<h3>{program.name}</h3>
-
-					<p className='meta'>
-						<strong>Stopień:</strong> {program.degreeType}
-					</p>
-
-					<p className='meta'>
-						<strong>Tryb:</strong> {program.studyModes.join(", ")}
-					</p>
-
-					<p className='meta'>{program.description}</p>
-				</div>
+				<ProgramCard key={program.name} program={program} />
 			))}
 
 			{valueResult && <button onClick={downloadJson}>Download JSON</button>}

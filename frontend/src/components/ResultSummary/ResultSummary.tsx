@@ -1,4 +1,4 @@
-import type { ScrapeResult } from "../types/types";
+import type { ScrapeResult } from "../../types/types";
 
 type ResultSummaryProps = {
 	result: ScrapeResult;
