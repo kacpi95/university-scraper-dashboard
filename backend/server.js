@@ -11,6 +11,13 @@ app.use(express.json());
 app.post("/scrape", async (req, res) => {
 	const { url } = req.body;
 
+	if (!url || !/^https?:\/\//.test(url)) {
+		return res.status(400).json({
+			success: false,
+			error: "Invalid URL",
+		});
+	}
+
 	try {
 		const response = await axios.get(url);
 		const $ = cheerio.load(response.data);
