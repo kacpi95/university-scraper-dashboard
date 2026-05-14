@@ -3,6 +3,7 @@ import type { ScrapeResult } from "../../types/types";
 import "./Dashboard.css";
 import ResultSummary from "../../components/ResultSummary/ResultSummary";
 import ProgramCard from "../../components/ProgramCard/ProgramCard";
+import JsonDownloadButton from "../../components/JsonDownloadButton/JsonDownloadButton";
 
 export default function Dashboard() {
 	const [url, setUrl] = useState<string>("");
@@ -34,19 +35,6 @@ export default function Dashboard() {
 		}
 	};
 
-	const downloadJson = () => {
-		if (!valueResult) return;
-
-		const blob = new Blob([JSON.stringify(valueResult, null, 2)], {
-			type: "application/json",
-		});
-
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(blob);
-		link.download = "scrape-result.json";
-		link.click();
-	};
-
 	return (
 		<div className='container'>
 			<h1>University Scraper</h1>
@@ -71,7 +59,7 @@ export default function Dashboard() {
 				<ProgramCard key={program.name} program={program} />
 			))}
 
-			{valueResult && <button onClick={downloadJson}>Download JSON</button>}
+			{valueResult && <JsonDownloadButton result={valueResult} />}
 		</div>
 	);
 }
