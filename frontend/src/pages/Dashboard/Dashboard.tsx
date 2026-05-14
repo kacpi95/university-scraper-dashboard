@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ScrapeResult } from "../../types/types";
 import "./Dashboard.css";
+import ResultSummary from "../../ResultSummary/ResultSummary";
 
 export default function Dashboard() {
 	const [url, setUrl] = useState<string>("");
@@ -63,19 +64,7 @@ export default function Dashboard() {
 
 			{error && <p style={{ color: "red" }}>{error}</p>}
 
-			{valueResult && (
-				<div className='summary'>
-					<p>
-						<strong>Źródło:</strong> {valueResult.sourceUrl}
-					</p>
-					<p>
-						<strong>Parser:</strong> {valueResult.parserUsed}
-					</p>
-					<p>
-						<strong>Liczba kierunków:</strong> {valueResult.programs.length}
-					</p>
-				</div>
-			)}
+			{valueResult && <ResultSummary result={valueResult} />}
 
 			{valueResult?.programs?.map((program) => (
 				<div className='card' key={program.name}>
@@ -97,4 +86,3 @@ export default function Dashboard() {
 		</div>
 	);
 }
-
