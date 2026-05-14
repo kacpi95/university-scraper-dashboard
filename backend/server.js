@@ -45,19 +45,23 @@ app.post("/scrape", async (req, res) => {
 				degreeType = "JEDNOLITE";
 			}
 
-			let studyMode = "UNKNOWN";
+			const studyModes = new Set();
 
 			$(el)
 				.find(".ks-icon")
 				.each((_, icon) => {
 					const title = $(icon).attr("title");
 
-					if (title?.includes("stacjonarny")) {
-						studyMode = "STACJONARNE";
+					if (title?.toLowerCase().includes("stacjonarn")) {
+						studyModes.add("STACJONARNE");
 					}
 
-					if (title?.includes("niestacjonarny")) {
-						studyMode = "NIESTACJONARNE";
+					if (title?.toLowerCase().includes("niestacjonarn")) {
+						studyModes.add("NIESTACJONARNE");
+					}
+
+					if (title?.toLowerCase().includes("online")) {
+						studyModes.add("ONLINE");
 					}
 				});
 
@@ -66,7 +70,7 @@ app.post("/scrape", async (req, res) => {
 			programs.push({
 				name,
 				degreeType,
-				studyMode,
+				studyModes: studyModes.size ? Array.from(studyModes) : ["UNKNOWN"],
 				description,
 			});
 		});
