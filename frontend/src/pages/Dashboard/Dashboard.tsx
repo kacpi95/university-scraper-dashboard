@@ -32,6 +32,19 @@ export default function Dashboard() {
 		}
 	};
 
+	const downloadJson = () => {
+		if (!valueResult) return;
+
+		const blob = new Blob([JSON.stringify(valueResult, null, 2)], {
+			type: "application/json",
+		});
+
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = "scrape-result.json";
+		link.click();
+	};
+
 	return (
 		<div className='container'>
 			<h1>University Scraper</h1>
@@ -43,12 +56,26 @@ export default function Dashboard() {
 					placeholder='Enter university URL'
 				/>
 
-				<button onClick={scrape} disabled={loading}>
+				<button onClick={scrape} disabled={loading || !url.trim()}>
 					{loading ? "Scraping..." : "Scrape"}
 				</button>
 			</div>
 
 			{error && <p style={{ color: "red" }}>{error}</p>}
+
+			{valueResult && (
+				<div className='summary'>
+					<p>
+						<strong>Źródło:</strong> {valueResult.sourceUrl}
+					</p>
+					<p>
+						<strong>Parser:</strong> {valueResult.parserUsed}
+					</p>
+					<p>
+						<strong>Liczba kierunków:</strong> {valueResult.programs.length}
+					</p>
+				</div>
+			)}
 
 			{valueResult?.programs?.map((program) => (
 				<div className='card' key={program.name}>
@@ -59,12 +86,15 @@ export default function Dashboard() {
 					</p>
 
 					<p className='meta'>
-						<strong>Tryb:</strong> {program.studyMode}
+						<strong>Tryb:</strong> {program.studyModes.join(", ")}
 					</p>
 
 					<p className='meta'>{program.description}</p>
 				</div>
 			))}
+
+			{valueResult && <button onClick={downloadJson}>Download JSON</button>}
 		</div>
 	);
 }
+
