@@ -4,6 +4,7 @@ import "./Dashboard.css";
 import ResultSummary from "../../components/ResultSummary/ResultSummary";
 import ProgramCard from "../../components/ProgramCard/ProgramCard";
 import JsonDownloadButton from "../../components/JsonDownloadButton/JsonDownloadButton";
+import UrlForm from "../../components/UrlForm/UrlForm";
 
 export default function Dashboard() {
 	const [url, setUrl] = useState<string>("");
@@ -39,17 +40,12 @@ export default function Dashboard() {
 		<div className='container'>
 			<h1>University Scraper</h1>
 
-			<div className='inputRow'>
-				<input
-					value={url}
-					onChange={(e) => setUrl(e.target.value)}
-					placeholder='Enter university URL'
-				/>
-
-				<button onClick={scrape} disabled={loading || !url.trim()}>
-					{loading ? "Scraping..." : "Scrape"}
-				</button>
-			</div>
+			<UrlForm
+				url={url}
+				loading={loading}
+				onUrlChange={setUrl}
+				onSubmit={scrape}
+			/>
 
 			{error && <p style={{ color: "red" }}>{error}</p>}
 
